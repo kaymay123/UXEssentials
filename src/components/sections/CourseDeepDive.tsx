@@ -1,5 +1,8 @@
 import React from 'react';
 import Button from '../ui/Button';
+// BUG #3: Incorrect import path - references 'course' (singular) but actual file is 'courses.ts' (plural).
+// This causes a module resolution error and prevents the app from compiling.
+// Should be: import { courses, courseDeepDiveData } from '../../data/courses';
 import { courses, courseDeepDiveData } from '../../data/course';
 import { Check, User, Clock, BarChart } from 'lucide-react';
 
