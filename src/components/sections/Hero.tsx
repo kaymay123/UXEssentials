@@ -29,9 +29,7 @@ const Hero: React.FC = () => {
             </div>
             
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
-               {/* BUG: Photoshop badge links to Figma course section (#details-fi-101) instead of Photoshop section (#details-ps-101).
-                    This appears to be a copy-paste error. Should be: href="#details-ps-101" */}
-               <a href="#details-fi-101" className="group flex items-center gap-2 pl-2 pr-4 py-1.5 bg-white border border-slate-200 rounded-full shadow-sm hover:shadow-md hover:border-primary-200 hover:scale-105 transition-all duration-200 cursor-pointer">
+               <a href="#details-ps-101" className="group flex items-center gap-2 pl-2 pr-4 py-1.5 bg-white border border-slate-200 rounded-full shadow-sm hover:shadow-md hover:border-primary-200 hover:scale-105 transition-all duration-200 cursor-pointer">
                  <div className="w-6 h-6 bg-[#31A8FF] rounded flex items-center justify-center text-white text-[10px] font-bold shadow-sm">Ps</div> 
                  <span className="text-sm font-medium text-slate-600 group-hover:text-[#31A8FF] transition-colors">Photoshop</span>
                </a>
