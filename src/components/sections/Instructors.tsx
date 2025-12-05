@@ -22,78 +22,73 @@ const Instructors: React.FC = () => {
               <p className="text-primary-600 font-medium text-sm mb-3">{instructor.role}</p>
               
               <div className="flex gap-2 mb-4">
-                {instructor.tools.map((tool, idx) => (
+                {instructor.tools.map((tool) => (
                   <span key={tool} className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-md font-medium">
-                    {instructor.tools[idx + 1] || tool}  // BUG #9 ANALYSIS: Incorrect array index access
+                    {tool}  // BUG #9 FIXED: Changed from instructor.tools[idx + 1] to use current tool
                   </span>
                 ))}
               </div>
           // 
-          // PROBLEM IDENTIFIED:
-          //   Line 27 uses instructor.tools[idx + 1] instead of the current tool variable.
-          //   This causes the wrong tool name to be displayed and will show undefined for the last tool.
+          // PROBLEM IDENTIFIED (RESOLVED):
+          //   Line 27 was previously using instructor.tools[idx + 1] instead of the current tool variable.
+          //   This caused the wrong tool name to be displayed and would show undefined for the last tool.
           //
-          // CURRENT CODE ISSUE:
-          //   - Line 25: instructor.tools.map((tool, idx) => (
-          //   - Line 27: {instructor.tools[idx + 1] || tool}  // ❌ WRONG - accesses next element
+          // PREVIOUS CODE ISSUE (FIXED):
+          //   - Previous: instructor.tools.map((tool, idx) => (
+          //   - Previous: {instructor.tools[idx + 1] || tool}  // ❌ WRONG - accessed next element
+          //   - Now: instructor.tools.map((tool) => (
+          //   - Now: {tool}  // ✅ FIXED - uses current tool directly
           //
-          // HOW THE BUG MANIFESTS:
+          // HOW THE BUG MANIFESTED (RESOLVED):
           //   Example: instructor.tools = ['Photoshop', 'Figma', 'Sketch']
           //   
-          //   Iteration 0: idx=0, tool='Photoshop'
-          //     - Displays: instructor.tools[0 + 1] = instructor.tools[1] = 'Figma'  // ❌ Wrong!
-          //     - Should display: 'Photoshop'
+          //   Previous behavior:
+          //     - Iteration 0: Displayed 'Figma' instead of 'Photoshop'  // ❌ Wrong
+          //     - Iteration 1: Displayed 'Sketch' instead of 'Figma'  // ❌ Wrong
+          //     - Iteration 2: Displayed undefined, fell back to 'Sketch'  // ✅ Correct by accident
           //
-          //   Iteration 1: idx=1, tool='Figma'
-          //     - Displays: instructor.tools[1 + 1] = instructor.tools[2] = 'Sketch'  // ❌ Wrong!
-          //     - Should display: 'Figma'
+          //   Current behavior (FIXED):
+          //     - Iteration 0: Displays 'Photoshop'  // ✅ Correct
+          //     - Iteration 1: Displays 'Figma'  // ✅ Correct
+          //     - Iteration 2: Displays 'Sketch'  // ✅ Correct
           //
-          //   Iteration 2: idx=2, tool='Sketch'
-          //     - Displays: instructor.tools[2 + 1] = instructor.tools[3] = undefined
-          //     - Falls back to: tool = 'Sketch'  // ✅ Correct by accident (fallback works)
+          // PREVIOUS RUNTIME BEHAVIOR (RESOLVED):
+          //   - First N-1 tools: Displayed the NEXT tool in the array (wrong tool)
+          //   - Last tool: Displayed undefined, then fell back to correct tool via || operator
+          //   - Result: All tools were shifted forward, last tool was correct only due to fallback
           //
-          // RUNTIME BEHAVIOR:
-          //   - First N-1 tools: Display the NEXT tool in the array (wrong tool)
-          //   - Last tool: Displays undefined, then falls back to correct tool via || operator
-          //   - Result: All tools are shifted forward, last tool is correct only due to fallback
-          //
-          // WHY THIS IS A PROBLEM:
+          // WHY THIS WAS A PROBLEM:
           //   1. Wrong information displayed to users
-          //   2. Inconsistent behavior (last item works by accident)
-          //   3. If tools array has only one item, it will show undefined
-          //   4. The key={tool} uses the correct tool, but display shows wrong tool (inconsistency)
+          //   2. Inconsistent behavior (last item worked by accident)
+          //   3. If tools array had only one item, it would show undefined
+          //   4. The key={tool} used the correct tool, but display showed wrong tool (inconsistency)
           //
           // ROOT CAUSE:
           //   Developer confused themselves with array indexing:
           //   - Possibly copied code from a different context where idx+1 was needed
           //   - May have been thinking about accessing "next" element for some reason
           //   - Didn't realize the map callback already provides the current element as 'tool'
-          //   - The || tool fallback suggests they knew something was wrong but didn't fix it properly
+          //   - The || tool fallback suggested they knew something was wrong but didn't fix it properly
           //
-          // THE CORRECT APPROACH:
-          //   The map callback already provides the current element:
-          //   - (tool, idx) => tool is the current element at index idx
-          //   - instructor.tools[idx] would also work but is redundant
-          //   - instructor.tools[idx + 1] accesses the NEXT element (wrong)
-          //
-          // RECOMMENDED SOLUTION:
-          //   Change line 27 from: {instructor.tools[idx + 1] || tool}
-          //   To: {tool}
-          //
-          //   Also, the idx parameter is no longer needed:
-          //   Change line 25 from: {instructor.tools.map((tool, idx) => (
+          // SOLUTION APPLIED:
+          //   Changed line 25 from: {instructor.tools.map((tool, idx) => (
           //   To: {instructor.tools.map((tool) => (
           //
-          // WHY THE FALLBACK DOESN'T HELP:
-          //   The || tool fallback only works for the last element when idx+1 is out of bounds.
-          //   For all other elements, idx+1 is valid, so it shows the wrong tool without falling back.
+          //   Changed line 27 from: {instructor.tools[idx + 1] || tool}
+          //   To: {tool}  ✅ FIXED
           //
-          // SEVERITY: Medium
-          //   - Runtime error: Wrong data displayed (functional bug)
-          //   - User impact: Users see incorrect tool names for instructors
-          //   - Data integrity: Displayed information doesn't match actual data
-          //   - Edge case: Single tool in array would show undefined
-          //   - Fix complexity: Simple (use the tool variable directly)
+          // BENEFITS OF FIX:
+          //   - Correct tool names now displayed for all instructors
+          //   - Consistent behavior for all array elements
+          //   - No more undefined values
+          //   - Cleaner code (removed unnecessary idx parameter)
+          //   - Code now matches the key={tool} which uses the correct tool
+          //
+          // SEVERITY: Medium (RESOLVED)
+          //   - Runtime error: FIXED (correct data now displayed)
+          //   - User impact: RESOLVED (users see correct tool names)
+          //   - Data integrity: RESTORED (displayed information matches actual data)
+          //   - Edge case: FIXED (single tool in array now works correctly)
               
               <p className="text-slate-500 text-sm leading-relaxed">
                 "{instructor.bio}"
