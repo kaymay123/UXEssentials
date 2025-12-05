@@ -20,8 +20,64 @@ const Header: React.FC = () => {
     { name: 'How It Works', href: '#how-it-works' },
     { name: 'Instructors', href: '#instructors' },
     { name: 'Pricing', href: '#pricing' },
-    { name: 'FAQ', href: '#faqs' },
+    { name: 'FAQ', href: '#faqs' },  // BUG #7 ANALYSIS: Incorrect section ID in navigation
   ];
+  // 
+  // PROBLEM IDENTIFIED:
+  //   The FAQ navigation link uses '#faqs' (plural) but the actual section ID is '#faq' (singular).
+  //   This mismatch prevents the navigation link from correctly scrolling to the FAQ section.
+  //
+  // ID MISMATCH:
+  //   - Navigation link (line 23): href: '#faqs'  // ❌ WRONG - plural
+  //   - Actual section ID (FAQ.tsx line 13): id="faq"  // ✅ CORRECT - singular
+  //
+  // FUNCTIONAL IMPACT:
+  //   - Clicking "FAQ" in navigation does not scroll to the FAQ section
+  //   - Browser tries to find an element with id="faqs" which doesn't exist
+  //   - User experience is broken - navigation link appears to do nothing
+  //   - Works in both desktop and mobile navigation (both use navLinks array)
+  //
+  // HOW ANCHOR LINKS WORK:
+  //   - Browser looks for an element with matching id attribute
+  //   - #faqs looks for <element id="faqs">
+  //   - Since FAQ section has id="faq", the link fails silently
+  //   - No error is thrown, but navigation doesn't work
+  //
+  // ROOT CAUSE:
+  //   This is a simple typo/inconsistency error:
+  //   - Developer added an 's' by mistake when creating the navigation link
+  //   - Inconsistent with naming convention (other links match their section IDs exactly)
+  //   - Could be copy-paste error or oversight during development
+  //   - No validation to catch ID mismatches between navigation and sections
+  //
+  // NAMING CONSISTENCY CHECK:
+  //   - Courses: href: '#courses' → id="courses" ✅
+  //   - How It Works: href: '#how-it-works' → id="how-it-works" ✅
+  //   - Instructors: href: '#instructors' → id="instructors" ✅
+  //   - Pricing: href: '#pricing' → id="pricing" ✅
+  //   - FAQ: href: '#faqs' → id="faq" ❌ MISMATCH
+  //
+  // WHY THIS IS REALISTIC:
+  //   - Common typo when pluralizing words (FAQ vs FAQs)
+  //   - Easy to miss during development (no runtime error)
+  //   - Inconsistent naming conventions
+  //   - No automated testing to catch navigation link mismatches
+  //
+  // RECOMMENDED SOLUTION:
+  //   Change line 23 from: { name: 'FAQ', href: '#faqs' },
+  //   To: { name: 'FAQ', href: '#faq' },
+  //
+  // PREVENTION:
+  //   - Use constants for section IDs shared between components
+  //   - Add automated tests to verify navigation links match section IDs
+  //   - Code review checklist for anchor link consistency
+  //   - TypeScript types for navigation links with validation
+  //
+  // SEVERITY: Low
+  //   - Functional impact: Navigation link doesn't work (broken UX)
+  //   - No runtime errors: Fails silently
+  //   - Easy to fix: Single character change
+  //   - User impact: Users can't navigate to FAQ section via header link
 
   return (
     <header 
