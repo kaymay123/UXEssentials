@@ -9,7 +9,60 @@ export const courses: Course[] = [
     title: 'Photoshop for UI Designers',
     level: 'Beginner',
     instructor: 'Alex Nguyen',
-    duration: '5 weeks · 15 lessons',
+    duration: '5 weeks · 15 lessons',  // BUG #10 ANALYSIS: Incorrect course duration data
+    // 
+    // PROBLEM IDENTIFIED:
+    //   The Photoshop course duration is set to "5 weeks · 15 lessons" which is incorrect.
+    //   This value matches the Figma course duration (line 32), suggesting a copy-paste error.
+    //
+    // CURRENT DATA COMPARISON:
+    //   - Photoshop (ps-101, line 12): '5 weeks · 15 lessons'  // ❌ WRONG
+    //   - Illustrator (ai-101, line 22): '3 weeks · 10 lessons'  // ✅ Unique value
+    //   - Figma (fi-101, line 32): '5 weeks · 15 lessons'  // ✅ Correct (matches Photoshop incorrectly)
+    //
+    // EXPECTED CORRECT VALUE:
+    //   Photoshop course should have: '4 weeks · 12 lessons'
+    //
+    // DATA INTEGRITY ISSUE:
+    //   - Two different courses (Photoshop and Figma) have identical duration values
+    //   - This creates confusion for users comparing courses
+    //   - Misrepresents the actual course length and content
+    //   - Could lead to incorrect expectations from students
+    //
+    // ROOT CAUSE ANALYSIS:
+    //   This is a classic copy-paste error pattern:
+    //   1. Developer created the Figma course entry first with "5 weeks · 15 lessons"
+    //   2. When creating the Photoshop course, they copied the Figma entry as a template
+    //   3. Updated most fields (id, title, instructor, skills, tool) but forgot to update duration
+    //   4. The duration field was overlooked during the copy-paste-edit process
+    //
+    // WHY THIS IS REALISTIC:
+    //   - Common mistake when creating similar data structures
+    //   - Easy to miss when multiple fields need updating
+    //   - No type system validation catches this (duration is just a string)
+    //   - Visual similarity between entries makes it easy to overlook
+    //
+    // IMPACT:
+    //   - Low severity: Doesn't break functionality
+    //   - User experience: Misleading course information
+    //   - Business impact: Could affect user expectations and course enrollment decisions
+    //   - Data consistency: Reduces trust in data accuracy
+    //
+    // RECOMMENDED SOLUTION:
+    //   Change line 12 from: duration: '5 weeks · 15 lessons',
+    //   To: duration: '4 weeks · 12 lessons',
+    //
+    // PREVENTION:
+    //   - Use TypeScript enums or constants for common values
+    //   - Add data validation tests
+    //   - Code review checklist for data entry
+    //   - Use unique identifiers or validation to catch duplicate durations
+    //
+    // SEVERITY: Low
+    //   - Functional impact: None (code still runs)
+    //   - Data accuracy: Affected (incorrect information displayed)
+    //   - User impact: Minor (misleading but not critical)
+    //   - Fix complexity: Trivial (single value change)
     format: 'Video lessons + practice files',
     skills: ['UI-ready layouts', 'Visual hierarchy', 'Exporting assets'],
     tool: 'Photoshop',
