@@ -35,7 +35,7 @@ const FAQ: React.FC = () => {
                 </div>
               )}
             </div>
-          )}  // BUG #6 ANALYSIS: Missing closing parenthesis
+          ))}  // BUG #6 FIXED: Added missing closing parenthesis
           // 
           // STRUCTURE BREAKDOWN:
           // Line 18: {faqData.map((item, index) => (
@@ -48,24 +48,22 @@ const FAQ: React.FC = () => {
           //   - ')' closes the arrow function body parentheses (implicit return)
           //   - ')' closes the map function call
           //   - '}' closes the JSX expression
-          //   Result: ))}}
+          //   Result: ))}}  ✅ FIXED
           //
-          // CURRENT CLOSING STRUCTURE (Line 38):
-          //   - ')' closes... something (ambiguous)
-          //   - '}' closes the JSX expression
-          //   Result: )}  // MISSING ONE CLOSING PARENTHESIS
+          // PREVIOUS ISSUE (Line 38):
+          //   - Had: )}  // MISSING ONE CLOSING PARENTHESIS
+          //   - Now: ))}  // CORRECT - Two closing parentheses
           //
-          // IMPACT:
-          //   - This will cause a syntax error during compilation/transpilation
-          //   - TypeScript/JavaScript parser will fail to parse the JSX correctly
-          //   - The error message will likely indicate "Expected ')'" or similar
+          // IMPACT (RESOLVED):
+          //   - Syntax error has been fixed
+          //   - TypeScript/JavaScript parser can now parse the JSX correctly
           //
           // ROOT CAUSE:
           //   When using arrow functions with implicit return in JSX, the parentheses
           //   structure is: map((params) => (jsx)) requiring two closing parens before the }
           //
-          // FIX REQUIRED:
-          //   Change line 38 from: )}  to: ))}
+          // FIX APPLIED:
+          //   Changed line 38 from: )}  to: ))}
         </div>
       </div>
     </section>
