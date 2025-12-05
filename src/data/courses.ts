@@ -9,48 +9,33 @@ export const courses: Course[] = [
     title: 'Photoshop for UI Designers',
     level: 'Beginner',
     instructor: 'Alex Nguyen',
-    duration: '5 weeks · 15 lessons',  // BUG #10 ANALYSIS: Incorrect course duration data
+    duration: '4 weeks · 12 lessons',  // BUG #10 FIXED: Changed from '5 weeks · 15 lessons' to correct value
     // 
-    // PROBLEM IDENTIFIED:
-    //   The Photoshop course duration is set to "5 weeks · 15 lessons" which is incorrect.
-    //   This value matches the Figma course duration (line 32), suggesting a copy-paste error.
+    // PROBLEM IDENTIFIED (RESOLVED):
+    //   The Photoshop course duration was previously set to "5 weeks · 15 lessons" which was incorrect.
+    //   This value matched the Figma course duration, suggesting a copy-paste error.
     //
-    // CURRENT DATA COMPARISON:
-    //   - Photoshop (ps-101, line 12): '5 weeks · 15 lessons'  // ❌ WRONG
+    // DATA COMPARISON (NOW CORRECT):
+    //   - Photoshop (ps-101, line 12): '4 weeks · 12 lessons'  // ✅ FIXED - Now unique and correct
     //   - Illustrator (ai-101, line 22): '3 weeks · 10 lessons'  // ✅ Unique value
-    //   - Figma (fi-101, line 32): '5 weeks · 15 lessons'  // ✅ Correct (matches Photoshop incorrectly)
+    //   - Figma (fi-101, line 32): '5 weeks · 15 lessons'  // ✅ Correct (unique value)
     //
-    // EXPECTED CORRECT VALUE:
-    //   Photoshop course should have: '4 weeks · 12 lessons'
-    //
-    // DATA INTEGRITY ISSUE:
-    //   - Two different courses (Photoshop and Figma) have identical duration values
-    //   - This creates confusion for users comparing courses
-    //   - Misrepresents the actual course length and content
-    //   - Could lead to incorrect expectations from students
+    // PREVIOUS ISSUE (RESOLVED):
+    //   - Two different courses (Photoshop and Figma) had identical duration values
+    //   - This created confusion for users comparing courses
+    //   - Misrepresented the actual course length and content
+    //   - Could have led to incorrect expectations from students
     //
     // ROOT CAUSE ANALYSIS:
-    //   This is a classic copy-paste error pattern:
+    //   This was a classic copy-paste error pattern:
     //   1. Developer created the Figma course entry first with "5 weeks · 15 lessons"
     //   2. When creating the Photoshop course, they copied the Figma entry as a template
     //   3. Updated most fields (id, title, instructor, skills, tool) but forgot to update duration
     //   4. The duration field was overlooked during the copy-paste-edit process
     //
-    // WHY THIS IS REALISTIC:
-    //   - Common mistake when creating similar data structures
-    //   - Easy to miss when multiple fields need updating
-    //   - No type system validation catches this (duration is just a string)
-    //   - Visual similarity between entries makes it easy to overlook
-    //
-    // IMPACT:
-    //   - Low severity: Doesn't break functionality
-    //   - User experience: Misleading course information
-    //   - Business impact: Could affect user expectations and course enrollment decisions
-    //   - Data consistency: Reduces trust in data accuracy
-    //
-    // RECOMMENDED SOLUTION:
-    //   Change line 12 from: duration: '5 weeks · 15 lessons',
-    //   To: duration: '4 weeks · 12 lessons',
+    // SOLUTION APPLIED:
+    //   Changed line 12 from: duration: '5 weeks · 15 lessons',
+    //   To: duration: '4 weeks · 12 lessons',  ✅ FIXED
     //
     // PREVENTION:
     //   - Use TypeScript enums or constants for common values
@@ -58,11 +43,10 @@ export const courses: Course[] = [
     //   - Code review checklist for data entry
     //   - Use unique identifiers or validation to catch duplicate durations
     //
-    // SEVERITY: Low
-    //   - Functional impact: None (code still runs)
-    //   - Data accuracy: Affected (incorrect information displayed)
-    //   - User impact: Minor (misleading but not critical)
-    //   - Fix complexity: Trivial (single value change)
+    // SEVERITY: Low (RESOLVED)
+    //   - Data accuracy: RESTORED (correct information now displayed)
+    //   - User experience: IMPROVED (accurate course information)
+    //   - Data consistency: RESTORED (each course now has unique duration)
     format: 'Video lessons + practice files',
     skills: ['UI-ready layouts', 'Visual hierarchy', 'Exporting assets'],
     tool: 'Photoshop',
