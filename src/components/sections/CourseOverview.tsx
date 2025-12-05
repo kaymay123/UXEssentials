@@ -53,12 +53,9 @@ const CourseOverview: React.FC = () => {
                     ))}
                   </ul>
                   
-                  {/* BUG #2: Missing null check - getElementById can return null if element doesn't exist (e.g., during initial render, 
-                       if CourseDeepDive isn't rendered yet, or if there's an ID mismatch). This will crash with "Cannot read property 'scrollIntoView' of null".
-                       Should be: el?.scrollIntoView({ behavior: 'smooth', block: 'start' }); */}
                   <Button variant="outline" fullWidth onClick={() => {
                      const el = document.getElementById(`details-${course.id}`);
-                     el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                     el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }}>
                     View Course Details
                   </Button>
