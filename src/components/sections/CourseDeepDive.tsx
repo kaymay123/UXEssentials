@@ -31,6 +31,8 @@ const CourseDeepDive: React.FC = () => {
                   <div>
                     <h4 className="font-bold text-slate-900 mb-4">What you'll learn</h4>
                     <ul className="space-y-2">
+                      {/* BUG #4: Missing optional chaining - if details is undefined, this will crash with "Cannot read property 'learn' of undefined".
+                           Should be: {details?.learn?.map((item, i) => (...))} */}
                       {details.learn.map((item, i) => (
                         <li key={i} className="flex items-start text-slate-600 text-sm">
                           <Check size={16} className="mr-2 text-primary-500 mt-1 flex-shrink-0" />
@@ -42,6 +44,8 @@ const CourseDeepDive: React.FC = () => {
                   <div>
                     <h4 className="font-bold text-slate-900 mb-4">Perfect for you if...</h4>
                     <ul className="space-y-2">
+                      {/* BUG #4: Missing optional chaining - if details is undefined, this will crash with "Cannot read property 'perfectFor' of undefined".
+                           Should be: {details?.perfectFor?.map((item, i) => (...))} */}
                       {details.perfectFor.map((item, i) => (
                         <li key={i} className="flex items-start text-slate-600 text-sm">
                            <span className="w-1.5 h-1.5 rounded-full bg-primary-300 mr-2 mt-1.5 flex-shrink-0"></span>
