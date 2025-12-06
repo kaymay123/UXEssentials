@@ -22,6 +22,9 @@ const Pricing: React.FC = () => {
                   : 'bg-white border border-slate-200 text-slate-900 shadow-lg'
               }`}
             >
+              {/* BUG #5: Reversed boolean condition - "Best Value" badge shows on the single course plan (isPopular: false) 
+                   instead of the bundle plan (isPopular: true). The negation operator is incorrect.
+                   Should be: {plan.isPopular && ( ... )} */}
               {!plan.isPopular && (
                 <div className="absolute top-0 right-0 bg-secondary-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-lg uppercase tracking-wide">
                   Best Value
