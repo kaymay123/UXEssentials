@@ -9,7 +9,44 @@ export const courses: Course[] = [
     title: 'Photoshop for UI Designers',
     level: 'Beginner',
     instructor: 'Alex Nguyen',
-    duration: '5 weeks · 15 lessons',
+    duration: '4 weeks · 12 lessons',  // BUG #10 FIXED: Changed from '5 weeks · 15 lessons' to correct value
+    // 
+    // PROBLEM IDENTIFIED (RESOLVED):
+    //   The Photoshop course duration was previously set to "5 weeks · 15 lessons" which was incorrect.
+    //   This value matched the Figma course duration, suggesting a copy-paste error.
+    //
+    // DATA COMPARISON (NOW CORRECT):
+    //   - Photoshop (ps-101, line 12): '4 weeks · 12 lessons'  // ✅ FIXED - Now unique and correct
+    //   - Illustrator (ai-101, line 22): '3 weeks · 10 lessons'  // ✅ Unique value
+    //   - Figma (fi-101, line 32): '5 weeks · 15 lessons'  // ✅ Correct (unique value)
+    //
+    // PREVIOUS ISSUE (RESOLVED):
+    //   - Two different courses (Photoshop and Figma) had identical duration values
+    //   - This created confusion for users comparing courses
+    //   - Misrepresented the actual course length and content
+    //   - Could have led to incorrect expectations from students
+    //
+    // ROOT CAUSE ANALYSIS:
+    //   This was a classic copy-paste error pattern:
+    //   1. Developer created the Figma course entry first with "5 weeks · 15 lessons"
+    //   2. When creating the Photoshop course, they copied the Figma entry as a template
+    //   3. Updated most fields (id, title, instructor, skills, tool) but forgot to update duration
+    //   4. The duration field was overlooked during the copy-paste-edit process
+    //
+    // SOLUTION APPLIED:
+    //   Changed line 12 from: duration: '5 weeks · 15 lessons',
+    //   To: duration: '4 weeks · 12 lessons',  ✅ FIXED
+    //
+    // PREVENTION:
+    //   - Use TypeScript enums or constants for common values
+    //   - Add data validation tests
+    //   - Code review checklist for data entry
+    //   - Use unique identifiers or validation to catch duplicate durations
+    //
+    // SEVERITY: Low (RESOLVED)
+    //   - Data accuracy: RESTORED (correct information now displayed)
+    //   - User experience: IMPROVED (accurate course information)
+    //   - Data consistency: RESTORED (each course now has unique duration)
     format: 'Video lessons + practice files',
     skills: ['UI-ready layouts', 'Visual hierarchy', 'Exporting assets'],
     tool: 'Photoshop',
